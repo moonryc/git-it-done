@@ -1,6 +1,23 @@
 
 let issueContainerEl = document.querySelector("#issues-container");
 let limitWarningEl = document.querySelector("#limit-warning");
+let repoNameEl = document.querySelector("#repo-name");
+
+const getRepoName = () => {
+    // grab repo name from url query string
+    let queryString = document.location.search;
+    let repoName = queryString.split("=")[1];
+
+    if (repoName) {
+        // display repo name on the page
+        repoNameEl.textContent = repoName;
+
+        getRepoIssues(repoName);
+    } else {
+        // if no repo was given, redirect to the homepage
+        document.location.replace("./index.html");
+    }
+}
 
 const getRepoIssues = (repo) => {
 
@@ -15,7 +32,7 @@ const getRepoIssues = (repo) => {
                 }
             })
         } else {
-            alert("There was a problem with your request")
+            document.location.replace("./index.html");
         }
     })
 
@@ -71,5 +88,6 @@ const displayWarning = (repo) => {
     limitWarningEl.appendChild(linkEl);
 }
 
-getRepoIssues("facebook/react")
-// getRepoIssues("moonryc/moonmeds")
+
+
+getRepoName()

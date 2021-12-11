@@ -32,6 +32,7 @@ const displayRepos = (repos, searchTerm) => {
 
     if(repos.length === 0){
         repoContainerEl.textContent = "No Repositories were found"
+        return
     }
 
     for (let i = 0; i < repos.length; i++) {

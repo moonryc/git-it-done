@@ -2,21 +2,22 @@ let userFormEl = document.querySelector("#user-form")
 let nameInputEl = document.querySelector("#username")
 let repoContainerEl = document.querySelector("#repos-container");
 let repoSearchTerm = document.querySelector("#repo-search-term");
+let languageButtonsEl = document.querySelector("#language-buttons")
 
 const getUserRepos = (user) => {
 
     let apiUrl = `https://api.github.com/users/${user}/repos`;
 
     fetch(apiUrl).then((response) => {
-        if(response.ok){
+        if (response.ok) {
             response.json().then((data) => {
                 displayRepos(data, user)
             })
-        }else{
+        } else {
             alert("error github user not found")
         }
 
-    }).catch((error)=> {
+    }).catch((error) => {
         // Notice this `.catch()` getting chained onto the end of the `.then()` method
         alert("Unable to connect to GitHub");
     });
@@ -24,13 +25,26 @@ const getUserRepos = (user) => {
 
 }
 
+const getFeatureRepos = (language) => {
+    let apiUrl = `https://api.github.com/search/repositories?q=${language}+is:featured&sort=help-wanted-issues`;
+
+    fetch(apiUrl).then(response => {
+        if (response.ok) {
+            response.json().then(data => {
+                displayRepos(data.items, language)
+            })
+        } else {
+            alert("Error: github user not found")
+        }
+    })
+}
 
 const displayRepos = (repos, searchTerm) => {
 
     repoContainerEl.textContent = ""
     repoSearchTerm.textContent = searchTerm
 
-    if(repos.length === 0){
+    if (repos.length === 0) {
         repoContainerEl.textContent = "No Repositories were found"
         return
     }
@@ -84,6 +98,16 @@ const formSubmitHandler = (event) => {
     }
 }
 
+const buttonClickHandler = function(event) {
+    let language = event.target.getAttribute("data-language")
+    if (language) {
+        getFeatureRepos(language)
+        console.log(language)
+        repoContainerEl.textContent = ""
+
+    }
+}
+
 userFormEl.addEventListener("submit", formSubmitHandler)
 
-// getUserRepos("moonryc")
+languageButtonsEl.addEventListener("click", buttonClickHandler)
